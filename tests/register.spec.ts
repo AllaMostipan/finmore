@@ -1,27 +1,26 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Registration Page Tests', () => {
+    test.beforeEach(async({ page }) => {
+            await page.goto('/');
+        });
 
     test('Check registration with valid values', async ({ page }) => {
-        //open registration page
-        await page.goto('/');
-        const registrationLink = page.getByRole('button', {'name': 'Зареєструватися'});
-        await expect(registrationLink).toBeVisible();
+        
+        const registrationLink = page.getByRole('button', { 'name': 'Зареєструватися' });
 
-         //якщо знайшли по ролі чи треба перевіряти що є такий текст?
-        await expect(registrationLink).toHaveText('Зареєструватися'); 
-       
+
         await registrationLink.click();
 
         //make sure you are in registration page
-        
+
         const registrationPage = page.getByTestId('register-title');
         await expect(registrationPage).toBeVisible();
         await expect(registrationPage).toHaveText('Реєстрація');
         const form = page.locator('.space-y-4');
-        await expect(form).toBeVisible({timeout: 100});
+        await expect(form).toBeVisible({ timeout: 100 });
         await expect(form).toBeEnabled();
-        
+
 
         //fill registration form valid value
         const fullName = page.getByTestId('register-name-input');
