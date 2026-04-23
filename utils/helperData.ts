@@ -32,7 +32,7 @@ export const currency =[
 export const generateUser = () => {
     const randomIndex =Math.floor(Math.random()*currency.length);
     const randomFirstNameIndex = Math.floor(Math.random() * firstnames.length);
-    const randomLastNameIndex = Math.floor(Math.random()*lastnames.length)
+    const randomLastNameIndex = Math.floor(Math.random() * lastnames.length)
     
     const timestamp = Date.now();
  

@@ -34,15 +34,6 @@ export class RegistrationPage {
 
     }
 
-    async openLogin() {
-        await this.page.goto('/');
-
-    }
-
-    async verifyLoginPageLoaded() {
-        await expect(this.page).toHaveURL('/');
-        await expect(this.page).toHaveTitle('Повнофункціональний фінансовий менеджер')
-    }
 
     async openRegistrationPage() {
         await expect(this.registrationLink).toBeVisible();
@@ -122,7 +113,7 @@ export class RegistrationPage {
         await expect(this.userMenu).toHaveText(fullName);
     }
 
-    async registrationValidValue(fullName: string, email: string, password: string, confirmPassword: string, currency: string ){
+    async registar(fullName: string, email: string, password: string, confirmPassword: string, currency: string ){
         await this.fillFullName(fullName);
         await this.fillEmail(email);
         await this.fillPassword(password);
