@@ -30,7 +30,7 @@ test.describe('Registration Page Tests', () => {
         });
 
         await test.step('Register user with valid data', async () => {
-            await registrationPage.registar(user.fullName, user.email, user.password, user.confirmPassword, user.currency);
+            await registrationPage.register(user.fullName, user.email, user.password, user.confirmPassword, user.currency);
 
         });
 
@@ -48,7 +48,7 @@ test.describe('Registration Page Tests', () => {
         });
 
         await test.step('Register user with valid data', async () => {
-            await registrationPage.registar(userFake.fullName, userFake.email, userFake.password, userFake.confirmPassword, userFake.currency);
+            await registrationPage.register(userFake.fullName, userFake.email, userFake.password, userFake.confirmPassword, userFake.currency);
 
         });
 

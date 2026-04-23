@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
+import { selectOption } from '../function/ActionMethods';
 
 export class RegistrationPage {
     readonly page: Page;
@@ -92,13 +93,13 @@ export class RegistrationPage {
         await expect(this.confirmPasswordInput).toHaveValue(confirmPassword);
     }
 
-    async selectCurrency(currency: string){
-        await expect(this.currencySelect).toBeVisible();
-        await expect(this.currencySelect).toBeEnabled();
+ async selectCurrency(currency: string) {
+  await selectOption(this.page, this.currencySelect, currency, {
+    strict: true,
+    log: true,
+  });
+ }
 
-        await this.currencySelect.click();
-        await this.currencySelect.selectOption(currency);
-    }
 
     async submit(){
         await expect(this.submitButton).toBeVisible();
@@ -113,7 +114,7 @@ export class RegistrationPage {
         await expect(this.userMenu).toHaveText(fullName);
     }
 
-    async registar(fullName: string, email: string, password: string, confirmPassword: string, currency: string ){
+    async register(fullName: string, email: string, password: string, confirmPassword: string, currency: string ){
         await this.fillFullName(fullName);
         await this.fillEmail(email);
         await this.fillPassword(password);
