@@ -30,9 +30,15 @@ test.describe('Registration Page Tests', () => {
         });
 
         await test.step('Register user with valid data', async () => {
-            await registrationPage.register(user.fullName, user.email, user.password, user.confirmPassword, user.currency);
+            await registrationPage.register(
+                user.fullName, 
+                user.email, 
+                user.password, 
+                user.confirmPassword, 
+                user.currency);
 
         });
+        
 
         await test.step('Check user registered', async () => {
             await registrationPage.verifyRegistrationSuccess(user.fullName);

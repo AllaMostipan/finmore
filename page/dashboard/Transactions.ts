@@ -1,4 +1,5 @@
 import {Page, Locator, expect} from '@playwright/test';
+import { fill, click } from '../function/ActionMethods';
 
 export class Transactions {
     readonly page: Page;

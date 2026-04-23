@@ -1,5 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
-import { selectOption } from '../function/ActionMethods';
+import { selectOption, click, fill } from '../function/ActionMethods';
 
 export class RegistrationPage {
     readonly page: Page;
@@ -33,37 +33,27 @@ export class RegistrationPage {
         this.loginLink = page.getByTestId('switch-to-login-button');
         this.userMenu = page.getByTestId('user-menu-trigger');
 
-    }
+    };
 
 
     async openRegistrationPage() {
         await expect(this.registrationLink).toBeVisible();
         await expect(this.registrationLink).toBeEnabled();
-        await this.registrationLink.click();
-    }
+        await click(this.page, this.registrationLink);
+    };
 
     async verifyRegistationFormOpened() {
         await expect(this.pageTitle).toBeVisible();
         await expect(this.pageTitle).toHaveText('Реєстрація');
-    }
+    };
 
     async fillFullName(fullName: string) {
-        await expect(this.fullNameInput).toBeVisible();
-        await expect(this.fullNameInput).toBeEnabled();
-        await expect(this.fullNameInput).toHaveAttribute('placeholder', 'Іван Петренко');
-
-        await this.fullNameInput.fill(fullName);
-        await expect(this.fullNameInput).toHaveValue(fullName);
-    }
+        await fill(this.page, this.fullNameInput, fullName);
+    };
 
     async fillEmail(email: string) {
-        await expect(this.emailInput).toBeVisible();
-        await expect(this.emailInput).toBeEnabled();
-        await expect(this.emailInput).toHaveAttribute('placeholder', 'your@email.com');
-
-        await this.emailInput.fill(email);
-        await expect(this.emailInput).toHaveValue(email);
-    }
+        await fill(this.page, this.emailInput, email)
+    };
 
     async fillPassword(password: string) {
         await expect(this.passwordInput).toBeVisible();
@@ -77,9 +67,9 @@ export class RegistrationPage {
         await this.viewPasswordIcon.click();
 
         await expect(this.passwordInput).toHaveValue(password);
-    }
+    };
 
-    async fillConfirmPassword (confirmPassword: string){
+    async fillConfirmPassword(confirmPassword: string) {
         await expect(this.confirmPasswordInput).toBeVisible();
         await expect(this.confirmPasswordInput).toBeEnabled();
         await expect(this.confirmPasswordInput).toHaveAttribute('placeholder', 'Повторіть пароль');
@@ -91,30 +81,25 @@ export class RegistrationPage {
         await this.confirmViewPasswordIcon.click();
 
         await expect(this.confirmPasswordInput).toHaveValue(confirmPassword);
+    };
+
+    async selectCurrency(currency: string) {
+        await selectOption(this.page, this.currencySelect, currency, {
+            strict: true,
+            log: true,
+        });
     }
 
- async selectCurrency(currency: string) {
-  await selectOption(this.page, this.currencySelect, currency, {
-    strict: true,
-    log: true,
-  });
- }
-
-
-    async submit(){
-        await expect(this.submitButton).toBeVisible();
-        await expect(this.submitButton).toBeEnabled();
-
-        await this.submitButton.click();
-
+    async submit() {
+        await click(this.page, this.submitButton);
     }
 
-    async verifyRegistrationSuccess(fullName: string){
+    async verifyRegistrationSuccess(fullName: string) {
         await expect(this.userMenu).toBeVisible();
         await expect(this.userMenu).toHaveText(fullName);
     }
 
-    async register(fullName: string, email: string, password: string, confirmPassword: string, currency: string ){
+    async register(fullName: string, email: string, password: string, confirmPassword: string, currency: string) {
         await this.fillFullName(fullName);
         await this.fillEmail(email);
         await this.fillPassword(password);

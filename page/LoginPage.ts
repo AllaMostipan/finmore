@@ -1,5 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
-import { fill } from '../function/ActionMethods';
+import { fill, click } from '../function/ActionMethods';
+
 
 export class LoginPage {
   readonly page: Page;
@@ -11,7 +12,7 @@ export class LoginPage {
   readonly submitButton: Locator;
   readonly error: Locator;
   readonly userMenu: Locator;
-
+  
   constructor(page: Page) {
     this.page = page;
 
@@ -22,6 +23,7 @@ export class LoginPage {
     this.submitButton = page.getByTestId('login-submit-button');
     this.error = page.getByTestId('login-error');
     this.userMenu = page.getByTestId('user-menu-trigger');
+    
   }
 
   async open() {
@@ -44,7 +46,7 @@ export class LoginPage {
   async login(email: string, password: string) {
     await fill(this.page, this.emailInput, email);
     await fill(this.page, this.passwordInput, password);
-    await this.submitButton.click();
+    await click(this.page, this.submitButton);
   }
 
   // -----------------------------
