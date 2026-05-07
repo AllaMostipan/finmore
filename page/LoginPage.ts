@@ -1,5 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
-import { fill, click } from '../function/ActionMethods';
+import { Actions } from '../function/ActionMethods';
+
 
 
 export class LoginPage {
@@ -44,9 +45,9 @@ export class LoginPage {
   // Головний метод логіну
   // -----------------------------
   async login(email: string, password: string) {
-    await fill(this.page, this.emailInput, email);
-    await fill(this.page, this.passwordInput, password);
-    await click(this.page, this.submitButton);
+    await Actions.fillField(this.emailInput, email);
+    await Actions.fillField(this.passwordInput, password);
+    await Actions.clickElement(this.submitButton);
   }
 
   // -----------------------------

@@ -1,5 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
-import { selectOption, click, fill } from '../function/ActionMethods';
+import {  Actions } from '../function/ActionMethods';
 
 export class RegistrationPage {
     readonly page: Page;
@@ -39,7 +39,7 @@ export class RegistrationPage {
     async openRegistrationPage() {
         await expect(this.registrationLink).toBeVisible();
         await expect(this.registrationLink).toBeEnabled();
-        await click(this.page, this.registrationLink);
+        await Actions.clickElement(this.registrationLink);
     };
 
     async verifyRegistationFormOpened() {
@@ -47,67 +47,117 @@ export class RegistrationPage {
         await expect(this.pageTitle).toHaveText('Реєстрація');
     };
 
-    async fillFullName(fullName: string) {
-        await fill(this.page, this.fullNameInput, fullName);
-    };
+    // async fillFullName(fullName: string) {
+    //     await fill(this.page, this.fullNameInput, fullName);
+    // };
 
-    async fillEmail(email: string) {
-        await fill(this.page, this.emailInput, email)
-    };
+    // async fillEmail(email: string) {
+    //     await fill(this.page, this.emailInput, email)
+    // };
 
-    async fillPassword(password: string) {
-        await expect(this.passwordInput).toBeVisible();
-        await expect(this.passwordInput).toBeEnabled();
-        await expect(this.passwordInput).toHaveAttribute('placeholder', 'Мінімум 6 символів');
+    // async fillPassword(password: string) {
+    //     await expect(this.passwordInput).toBeVisible();
+    //     await expect(this.passwordInput).toBeEnabled();
+    //     await expect(this.passwordInput).toHaveAttribute('placeholder', 'Мінімум 6 символів');
 
-        await this.passwordInput.fill(password);
+    //     await this.passwordInput.fill(password);
 
-        await expect(this.viewPasswordIcon).toBeVisible();
-        await expect(this.viewPasswordIcon).toBeEnabled();
-        await this.viewPasswordIcon.click();
+    //     await expect(this.viewPasswordIcon).toBeVisible();
+    //     await expect(this.viewPasswordIcon).toBeEnabled();
+    //     await this.viewPasswordIcon.clickElement();
 
-        await expect(this.passwordInput).toHaveValue(password);
-    };
+    //     await expect(this.passwordInput).toHaveValue(password);
+    // };
 
-    async fillConfirmPassword(confirmPassword: string) {
-        await expect(this.confirmPasswordInput).toBeVisible();
-        await expect(this.confirmPasswordInput).toBeEnabled();
-        await expect(this.confirmPasswordInput).toHaveAttribute('placeholder', 'Повторіть пароль');
+    // async fillConfirmPassword(confirmPassword: string) {
+    //     await expect(this.confirmPasswordInput).toBeVisible();
+    //     await expect(this.confirmPasswordInput).toBeEnabled();
+    //     await expect(this.confirmPasswordInput).toHaveAttribute('placeholder', 'Повторіть пароль');
 
-        await this.confirmPasswordInput.fill(confirmPassword);
+    //     await this.confirmPasswordInput.fill(confirmPassword);
 
-        await expect(this.confirmViewPasswordIcon).toBeVisible();
-        await expect(this.confirmViewPasswordIcon).toBeEnabled();
-        await this.confirmViewPasswordIcon.click();
+    //     await expect(this.confirmViewPasswordIcon).toBeVisible();
+    //     await expect(this.confirmViewPasswordIcon).toBeEnabled();
+    //     await this.confirmViewPasswordIcon.clickElement();
 
-        await expect(this.confirmPasswordInput).toHaveValue(confirmPassword);
-    };
+    //     await expect(this.confirmPasswordInput).toHaveValue(confirmPassword);
+    // };
 
-    async selectCurrency(currency: string) {
-        await selectOption(this.page, this.currencySelect, currency, {
-            strict: true,
-            log: true,
-        });
+    // async selectCurrency(currency: string) {
+    //     await selectOption(this.page, this.currencySelect, currency, {
+    //         strict: true,
+    //         log: true,
+    //     });
+    // }
+
+    // async submit() {
+    //     await clickElement(this.page, this.submitButton);
+    // }
+
+    
+
+    // async register(fullName: string, email: string, password: string, confirmPassword: string, currency: string) {
+    //     await this.fillFullName(fullName);
+    //     await this.fillEmail(email);
+    //     await this.fillPassword(password);
+    //     await this.fillConfirmPassword(confirmPassword);
+    //     await this.selectCurrency(currency);
+    //     await this.submit();
+    // }
+
+
+    async registerName(name: string) {
+
+        await Actions.fillField(this.fullNameInput, name, 'Name input');
+
+    }
+ 
+    async registerEmail(email: string) {
+
+        await Actions.fillField(this.emailInput, email, 'Email input');
+
+    }
+ 
+    async registerPassword(password: string) {
+
+        await Actions.fillField(this.passwordInput, password, 'Password input');
+
+
     }
 
-    async submit() {
-        await click(this.page, this.submitButton);
+    async confirmPassword(confirmPassword: string){
+        await Actions.fillField(this.confirmPasswordInput, confirmPassword, 'Confirm password field');
+    }
+ 
+    async clickElementRegisterButton() {
+
+        await Actions.clickElement(this.submitButton, 'Register button');
+
+    }
+ 
+    async getEmailValidity() {
+
+        return await Actions.getValidity(this.emailInput, 'Email field');
+
     }
 
+     async selectCurrency(currency: string) {
+        await Actions.selectDropdown( this.currencySelect, currency, 'Currency dropdown');
+    }
+
+     async register(fullName: string, email: string, password: string, confirmPassword: string, currency: string) {
+        await this.registerName(fullName);
+        await this.registerEmail(email);
+        await this.registerPassword(password);
+        await this.confirmPassword(confirmPassword);
+        await this.selectCurrency(currency);
+        await this.clickElementRegisterButton();
+    }
     async verifyRegistrationSuccess(fullName: string) {
         await expect(this.userMenu).toBeVisible();
         await expect(this.userMenu).toHaveText(fullName);
     }
-
-    async register(fullName: string, email: string, password: string, confirmPassword: string, currency: string) {
-        await this.fillFullName(fullName);
-        await this.fillEmail(email);
-        await this.fillPassword(password);
-        await this.fillConfirmPassword(confirmPassword);
-        await this.selectCurrency(currency);
-        await this.submit();
-    }
-
+ 
 
 
 }

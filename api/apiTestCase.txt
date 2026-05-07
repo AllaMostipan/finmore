@@ -1,0 +1,64 @@
+Test Case: Create Post
+Summary: Користувач може створити статтю з обов'язковими правильними полями
+Preconditions:
+  - Користувач залогінений
+  - Виконується POST /wp/v2/posts
+Steps to reproduce:
+  1. Виконати POST /wp/v2/posts
+  2. Надати тіло запиту:
+     {
+       "title": "create post",
+       "content": "post content"
+     }
+Expected result:
+  - HTTP 201 Created
+  - У відповіді повертається створена стаття з правильними полями
+  - Заголовки відповіді коректні
+
+API Checklist:
+  1. Статус код
+  2. Швидкість виконання запиту
+  3. JSON не пустий
+  4. Наявність параметрів, значення очікуваних полів, формат полів
+  5. Хедери
+
+Test Case: Get Post
+Summary: Користувач може переглянути створену статтю
+Preconditions:
+  - Користувач залогінений
+  - Існує створена стаття
+Steps to reproduce:
+  1. Виконати GET /wp/v2/posts/{id}
+Expected result:
+  - HTTP 200 OK
+  - У відповіді є поле "title": "create post"
+  - Відповідь містить дані статті
+
+Test Case: Update Post
+Summary: Користувач може редагувати існуючу статтю
+Preconditions:
+  - Користувач залогінений
+  - Існує створена стаття
+Steps to reproduce:
+  1. Виконати PUT /wp/v2/posts/{id}
+  2. Надати тіло запиту:
+     {
+       "title": "updated post",
+       "content": "updated content"
+     }
+Expected result:
+  - HTTP 200 OK
+  - У відповіді оновлено "title" на "updated post"
+  - У відповіді оновлено "content" на "updated content"
+
+Test Case: Delete Post
+Summary: Користувач може видалити існуючу статтю
+Preconditions:
+  - Користувач залогінений
+  - Існує створена стаття
+Steps to reproduce:
+  1. Виконати DELETE /wp/v2/posts/{id}
+Expected result:
+  - HTTP 200 OK
+  - У відповіді "deleted": true
+  - У полі "previous" присутні дані видаленої статті

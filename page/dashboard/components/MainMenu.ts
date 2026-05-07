@@ -1,4 +1,5 @@
 import {Page, Locator, expect} from '@playwright/test'
+import {Actions} from '../../../function/ActionMethods'
 
 export class MainMenu {
     readonly page: Page;
@@ -24,10 +25,36 @@ export class MainMenu {
         this.settingsMenu = page.getByTestId('nav-settings');
     }
 
-    async dashboardTabClick (){
-        await this.dashboard.click();
+    async dashboardTabclickElement (){
+        await Actions.clickElement(this.dashboard, 'Dashboard menu');
     }
 
-    
+    async transactionMenuclickElement (){
+        await Actions.clickElement(this.transactionMenu, 'Transaction menu');
+    }
+
+    async categoriesMenuclickElement (){
+        await Actions.clickElement(this.categoriesMenu, 'Categories menu');
+    }
+
+    async budgetsMenuclickElement (){
+        await Actions.clickElement(this.budgetsMenu, 'Budgets menu');
+    }
+
+    async accountsMenuclickElement (){
+        await Actions.clickElement(this.accountsMenu, 'Accounts menu');
+    }
+
+    async reportsMenuclickElement (){
+        await Actions.clickElement(this.reportsMenu, 'Reports menu');
+    }
+
+    async analyticsMenuclickElement (){
+        await Actions.clickElement(this.analyticsMenu, 'Analytics menu');
+    }
+
+    async settingsMenuclickElement (){
+        await Actions.clickElement(this.settingsMenu, 'Settings menu');
+    }
 
 }

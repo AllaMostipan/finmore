@@ -1,162 +1,152 @@
-import { Locator, Page, expect } from "@playwright/test";
+import { Locator, expect } from '@playwright/test';
+ 
+export class Actions {
+ 
+    static async fillField(locator: Locator, value: string, fieldName?: string) {
 
+        const name = fieldName || 'unknown field';
+ 
+        try {
 
+            console.log(` [FILL] ${name}: "${value}"`);
+ 
+            await locator.waitFor({ state: 'visible' });
 
-export async function click(
-  page: Page,
-  selector: string | Locator,
-  options: {
-    timeout?: number;
-    force?: boolean;
-    strict?: boolean; // якщо true — падати при помилках
-    log?: boolean;
-  } = {}
-): Promise<void> {
-  const {
-    timeout = 5000,
-    force = false,
-    strict = false,
-    log = true,
-  } = options;
+            await locator.fill('');
 
-  const locator =
-    typeof selector === 'string' ? page.locator(selector) : selector;
+            await locator.fill(value);
+ 
+            console.log(`[FILL SUCCESS] ${name}`);
 
-  try {
-    if (log) {
-      console.log(`[INFO] Очікування видимості елемента: "${selector}"`);
+        } catch (error) {
+
+            console.error(`[FILL ERROR] ${name}`);
+
+            throw new Error(`Failed to fill ${name}: ${error}`);
+
+        }
+
     }
-    await locator.waitFor({ state: 'visible', timeout });
+ 
+    static async clickElement(locator: Locator, elementName?: string) {
 
-    const enabled = await locator.isEnabled();
-    if (!enabled) {
-      if (log) {
-        console.log(`[WARN] Елемент неактивний: "${selector}"`);
-      }
-      throw new Error(`Element is disabled: ${selector}`);
+        const name = elementName || 'unknown element';
+ 
+        try {
+
+            console.log(`[CLICK] ${name}`);
+ 
+            await locator.waitFor({ state: 'visible' });
+
+            await locator.click();
+ 
+            console.log(`[CLICK SUCCESS] ${name}`);
+
+        } catch (error) {
+
+            console.error(` [CLICK ERROR] ${name}`);
+
+            throw new Error(`Failed to click ${name}: ${error}`);
+
+        }
+
+    }
+ 
+    static async selectDropdown(locator: Locator, value: string, name?: string) {
+
+        const field = name || 'dropdown';
+ 
+        try {
+
+            console.log(` [SELECT] ${field}: ${value}`);
+ 
+            await locator.waitFor({ state: 'visible' });
+
+            await locator.selectOption(value);
+ 
+            console.log(`[SELECT SUCCESS] ${field}`);
+
+        } catch (error) {
+
+            console.error(` [SELECT ERROR] ${field}`);
+
+            throw new Error(`Failed to select ${value} in ${field}: ${error}`);
+
+        }
+
+    }
+ 
+    static async getValidity(locator: Locator, fieldName?: string) {
+
+        const name = fieldName || 'field';
+ 
+        try {
+
+            console.log(`[VALIDATION CHECK] ${name}`);
+ 
+            const validity = await locator.evaluate(
+
+                (el: HTMLInputElement) => el.validity //браузерна валідація
+
+            );
+ 
+            console.log(`[VALIDITY RESULT] ${name}:`, validity);
+ 
+            return validity;
+
+        } catch (error) {
+
+            console.error(`[VALIDATION ERROR] ${name}`);
+
+            throw new Error(`Failed to get validity for ${name}: ${error}`);
+
+        }
+
+    }
+ 
+    static async expectVisible(locator: Locator, name?: string) {
+
+        const element = name || 'element';
+ 
+        try {
+
+            console.log(`[EXPECT VISIBLE] ${element}`);
+
+            await expect(locator).toBeVisible();
+
+            console.log(` [VISIBLE] ${element}`);
+
+        } catch (error) {
+
+            console.error(` [NOT VISIBLE] ${element}`);
+
+            throw new Error(`Element not visible: ${element}`);
+
+        }
+
+    }
+ 
+    static async expectText(locator: Locator, text: string, name?: string) {
+
+        const element = name || 'element';
+ 
+        try {
+
+            console.log(`[EXPECT TEXT] ${element}: "${text}"`);
+
+            await expect(locator).toHaveText(text);
+
+            console.log(`[TEXT MATCH] ${element}`);
+
+        } catch (error) {
+
+            console.error(` [TEXT MISMATCH] ${element}`);
+
+            throw new Error(`Text mismatch in ${element}. Expected: "${text}"`);
+
+        }
+
     }
 
-    if (log) {
-      console.log(`[SUCCESS] Клік по елементу: "${selector}"`);
-    }
-    await locator.click({ force });
-  } catch (err) {
-    if (log) {
-      console.warn(`click() warning for selector "${selector}":`, err);
-    }
-    if (strict) {
-      throw err;
-    }
-  }
-};
-
-
-export async function fill(
-  page: Page,
-  selector: string | Locator,
-  value: string,
-  options: {
-    clear?: boolean;
-    timeout?: number;
-    force?: boolean;
-    strict?: boolean; // якщо false — не падати при помилках
-    log?: boolean;
-  } = {}
-): Promise<void> {
-  const {
-    clear = true,
-    timeout = 5000,
-    force = false,
-    strict = false,
-    log = true
-  } = options;
-
-  const locator =
-    typeof selector === 'string' ? page.locator(selector) : selector;
-
-  try {
-
-    console.log(`[INFO] Перевірка видимості елемента: "${selector}"`);
-    await locator.waitFor({ state: 'visible', timeout });
-
-    if (!(await locator.isEnabled())) {
-      console.log(`[INFO] Перевірка активності елемента: "${selector}"`);
-      throw new Error(`Element is disabled: ${selector}`);
-    }
-
-
-    if (clear) {
-      console.log(`[INFO] Перевірка очищення елемента: "${selector}"`);
-      await locator.fill('', { force });
-    }
-
-    // 4) Заповнення
-    console.log(`[SUCCESS] Перевірка очищення елемента: "${selector}"`);
-    await locator.fill(value, { force });
-
-    // 5) Перевірка, що значення встановилось
-    const currentValue = await locator.inputValue();
-    if (currentValue !== value) {
-
-      throw new Error(
-        `Value mismatch. Expected "${value}", got "${currentValue}"`
-      );
-    }
-  } catch (err) {
-    if (log) {
-      console.warn(`fill() warning for selector "${selector}":`, err);
-    }
-
-    if (strict) {
-      throw err;
-    }
-  }
-};
-
-export async function selectOption(
-  page: Page,
-  selector: string | Locator,
-  values: string | string[],
-  options: {
-    timeout?: number;
-    strict?: boolean; // якщо true — падати при помилках
-    log?: boolean;
-  } = {}
-): Promise<void> {
-  const {
-    timeout = 5000,
-    strict = false,
-    log = true,
-  } = options;
-
-  const locator =
-    typeof selector === 'string' ? page.locator(selector) : selector;
-
-  try {
-    if (log) {
-      console.log(`[INFO] Очікування видимості select: "${selector}"`);
-    }
-    await locator.waitFor({ state: 'visible', timeout });
-    await expect(locator).toBeVisible();
-    await expect(locator).toBeEnabled();
-
-    if (log) {
-      console.log(`[SUCCESS] Вибір опції "${values}" у: "${selector}"`);
-    }
-    await locator.selectOption(values);
-  } catch (err) {
-    if (log) {
-      console.warn(`selectOption() warning for selector "${selector}":`, err);
-    }
-    if (strict) {
-      throw err;
-    }
-  }
 }
-
-
-
-
-
-
-
+ 
